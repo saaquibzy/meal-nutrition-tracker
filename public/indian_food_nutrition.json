@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Paneer Butter Masala",
+    "calories": 320,
+    "protein": 12,
+    "fat": 25,
+    "carbs": 12
+  },
+  {
+    "name": "Chicken Biryani",
+    "calories": 290,
+    "protein": 16,
+    "fat": 8,
+    "carbs": 38
+  },
+  {
+    "name": "Dal Tadka",
+    "calories": 180,
+    "protein": 9,
+    "fat": 7,
+    "carbs": 22
+  },
+  {
+    "name": "Roti",
+    "calories": 70,
+    "protein": 2.5,
+    "fat": 0.4,
+    "carbs": 15
+  },
+  {
+    "name": "Idli",
+    "calories": 39,
+    "protein": 1.6,
+    "fat": 0.2,
+    "carbs": 7.4
+  },
+  {
+    "name": "Dosa",
+    "calories": 133,
+    "protein": 2.7,
+    "fat": 2.8,
+    "carbs": 25
+  },
+  {
+    "name": "Rajma Chawal",
+    "calories": 220,
+    "protein": 7,
+    "fat": 4,
+    "carbs": 40
+  },
+  {
+    "name": "Aloo Paratha",
+    "calories": 210,
+    "protein": 4,
+    "fat": 9,
+    "carbs": 28
+  },
+  {
+    "name": "Chole Bhature",
+    "calories": 427,
+    "protein": 13,
+    "fat": 16,
+    "carbs": 58
+  }
+]
