@@ -7,6 +7,7 @@ export default function Auth({ user, setUser }) {
   const [password, setPassword] = useState("");
 
   const login = async () => {
+    console.log("Login data:", { email, password });
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
@@ -16,6 +17,7 @@ export default function Auth({ user, setUser }) {
   };
 
   const signup = async () => {
+    console.log("Signup data:", { email, password });
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
@@ -49,8 +51,17 @@ export default function Auth({ user, setUser }) {
 
   return (
     <div>
-      <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
-      <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" />
+      <input
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder="Email"
+      />
+      <input
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        placeholder="Password"
+        type="password"
+      />
       <button onClick={login}>Login</button>
       <button onClick={signup}>Sign Up</button>
       <button onClick={loginWithGoogle}>Google Login</button>
