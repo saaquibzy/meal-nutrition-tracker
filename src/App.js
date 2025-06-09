@@ -54,7 +54,6 @@ export default function App() {
 
   // --- Firestore Logic ---
 
-  // Save meal to Firestore
   async function saveMealToFirestore(food, nutrition, from = "dropdown") {
     if (!user) return;
     try {
@@ -70,7 +69,6 @@ export default function App() {
     }
   }
 
-  // Fetch meals (latest first) for current user
   async function fetchMeals() {
     if (!user) return;
     setLoadingHistory(true);
@@ -90,9 +88,6 @@ export default function App() {
     setLoadingHistory(false);
   }
 
-  // --- Batch Delete Logic ---
-
-  // Delete all meals for current user from Firestore
   async function clearHistoryFromFirestore() {
     if (!user) return;
     if (!window.confirm("Are you sure you want to delete ALL your meals? This cannot be undone.")) return;
@@ -111,9 +106,6 @@ export default function App() {
     setLoadingHistory(false);
   }
 
-  // --- UI Logic ---
-
-  // Handle food dropdown selection
   function handleDropdown(e) {
     const food = e.target.value;
     setSelectedFood(food);
@@ -121,7 +113,6 @@ export default function App() {
     setImage(null);
   }
 
-  // Handle file/image upload
   function handleImage(e) {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -131,7 +122,6 @@ export default function App() {
     }
   }
 
-  // Simulate AI food recognition (for demo, randomly pick a food)
   async function simulateAIRecognition() {
     const food = nutritionData[Math.floor(Math.random() * nutritionData.length)].name;
     const nutri = nutritionData.find((item) => item.name === food);
@@ -141,7 +131,6 @@ export default function App() {
     fetchMeals();
   }
 
-  // Add from dropdown
   async function addDropdownMeal() {
     if (!selectedFood) return;
     await saveMealToFirestore(selectedFood, nutrition, "dropdown");
@@ -150,15 +139,21 @@ export default function App() {
 
   // --- Render ---
 
-  // If user not logged in, show Auth component
+  // If user not logged in, show AuthPanel component
   if (!user) return (
     <div className="container">
       <h1>Indian Meal Nutrition Tracker 🥗</h1>
       <div className="card">
-        <Auth user={user} setUser={setUser} />
+        <AuthPanel setUser={setUser} />
       </div>
     </div>
   );
+
+  // Logout handler
+  const handleLogout = async () => {
+    await auth.signOut();
+    setUser(null);
+  };
 
   return (
     <div className="container">
@@ -166,6 +161,7 @@ export default function App() {
 
       <div className="card">
         <p>Welcome, {user.email || user.displayName}</p>
+        <button className="logout-btn" onClick={handleLogout} style={{float: "right", marginTop: "-2.5em"}}>Logout</button>
         <h2>1. Upload Meal Photo or Select Food</h2>
         <input type="file" accept="image/*" ref={fileInputRef} style={{ display: "none" }} onChange={handleImage} />
         <button className="upload-btn" onClick={() => fileInputRef.current.click()}>Upload Photo</button>
