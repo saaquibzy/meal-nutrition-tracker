@@ -11,7 +11,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import Auth from "./Auth";
+import AuthPanel from './components/AuthPanel';
 
 // Dummy nutrition data (can replace with your own or load from JSON)
 const nutritionData = [
