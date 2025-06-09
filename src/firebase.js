@@ -1,6 +1,6 @@
-// This assumes you've enabled all needed providers in Firebase Console
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, FacebookAuthProvider, OAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // <-- ADD THIS
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -10,10 +10,13 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
 };
-// Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export const githubProvider = new GithubAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
-export const linkedinProvider = new OAuthProvider('linkedin.com'); // Make sure to set up in Firebase
+export const linkedinProvider = new OAuthProvider('linkedin.com');
+
+export const db = getFirestore(app); // <-- ADD THIS LINE
