@@ -55,7 +55,17 @@ export default function AuthPanel({ setUser }) {
   };
 
   return (
-    <div className="auth-bg">
+    <div
+      className="auth-bg"
+      style={{
+        background: "url('/food-bg.jpg') center/cover no-repeat",
+        minHeight: "100vh",
+        width: "100vw",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
       <div className={`panel-container ${isLogin ? "" : "switch"}`}>
         {/* Register Side */}
         <div className="panel left-panel">
@@ -109,11 +119,11 @@ export default function AuthPanel({ setUser }) {
             <button type="button" onClick={() => handleSocialLogin(githubProvider)}><span className="icon">&#xf09b;</span></button>
             <button type="button" onClick={() => handleSocialLogin(linkedinProvider)}><span className="icon">in</span></button>
           </div>
-          {error && <div className="error">{error}</div>}
+          {error && isLogin && <div className="error">{error}</div>}
         </form>
         {/* Register Form */}
         <form className={`form register-form ${!isLogin ? "active" : ""}`} onSubmit={handleRegister}>
-          <h2>Registeration</h2>
+          <h2>Registration</h2>
           <div className="input-field">
             <input
               type="text"
@@ -152,7 +162,7 @@ export default function AuthPanel({ setUser }) {
             <button type="button" onClick={() => handleSocialLogin(githubProvider)}><span className="icon">&#xf09b;</span></button>
             <button type="button" onClick={() => handleSocialLogin(linkedinProvider)}><span className="icon">in</span></button>
           </div>
-          {error && <div className="error">{error}</div>}
+          {error && !isLogin && <div className="error">{error}</div>}
         </form>
       </div>
     </div>
