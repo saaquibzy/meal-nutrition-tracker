@@ -142,7 +142,8 @@ export default function App() {
   // If user not logged in, show AuthPanel component
   if (!user) return (
     <div className="container">
-      <h1>Indian Meal Nutrition Tracker 🥗</h1>
+      <h1>Nutrify AI </h1>
+      <h5>hf</h5>
       <div className="card">
         <AuthPanel setUser={setUser} />
       </div>
