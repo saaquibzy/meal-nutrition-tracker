@@ -1,19 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { auth, db } from "./firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import {
-  collection,
-  addDoc,
-  query,
-  where,
-  getDocs,
-  orderBy,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { motion } from "framer-motion";
 import AuthPanel from './components/AuthPanel';
+import "./LandingPage.css";
 
-// Dummy nutrition data (can replace with your own or load from JSON)
+// ----- Dummy nutrition data -----
 const nutritionData = [
   { name: "Paneer Butter Masala", calories: 320, protein: 12, fat: 25, carbs: 12 },
   { name: "Chicken Biryani", calories: 290, protein: 16, fat: 8, carbs: 38 },
@@ -27,6 +17,8 @@ const nutritionData = [
 ];
 
 export default function App() {
+  // All hooks at the top
+  const [showApp, setShowApp] = useState(false);
   const [user, setUser] = useState(null);
   const [selectedFood, setSelectedFood] = useState("");
   const [image, setImage] = useState(null);
@@ -36,31 +28,39 @@ export default function App() {
   const [error, setError] = useState("");
   const fileInputRef = useRef();
 
+  // Firestore and Auth imports (dynamic for SSR safety)
+  const [firebase, setFirebase] = useState({});
+  useEffect(() => {
+    if (showApp) {
+      import("./firebase").then(mod => setFirebase(mod));
+    }
+  }, [showApp]);
+
   // Listen for Firebase auth state
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
-    return () => unsub();
-  }, []);
+    if (!showApp || !firebase.auth) return;
+    const unsub = firebase.auth.onAuthStateChanged((u) => setUser(u));
+    return () => unsub && unsub();
+  }, [showApp, firebase.auth]);
 
   // Fetch meal history from Firestore for current user
   useEffect(() => {
-    if (!user) {
+    if (!showApp || !firebase.db || !user) {
       setHistory([]);
       return;
     }
     fetchMeals();
     // eslint-disable-next-line
-  }, [user]);
+  }, [user, firebase.db, showApp]);
 
   // --- Firestore Logic ---
-
-  async function saveMealToFirestore(food, nutrition, from = "dropdown") {
-    if (!user) return;
+  async function saveMealToFirestore(food, nutritionVal, from = "dropdown") {
+    if (!user || !firebase.db) return;
     try {
-      await addDoc(collection(db, "meals"), {
+      await firebase.addDoc(firebase.collection(firebase.db, "meals"), {
         uid: user.uid,
         food,
-        nutrition,
+        nutrition: nutritionVal,
         date: new Date().toISOString(),
         from,
       });
@@ -70,16 +70,16 @@ export default function App() {
   }
 
   async function fetchMeals() {
-    if (!user) return;
+    if (!user || !firebase.db) return;
     setLoadingHistory(true);
     setError("");
     try {
-      const q = query(
-        collection(db, "meals"),
-        where("uid", "==", user.uid),
-        orderBy("date", "desc")
+      const q = firebase.query(
+        firebase.collection(firebase.db, "meals"),
+        firebase.where("uid", "==", user.uid),
+        firebase.orderBy("date", "desc")
       );
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await firebase.getDocs(q);
       const meals = querySnapshot.docs.map(doc => doc.data());
       setHistory(meals);
     } catch (e) {
@@ -89,14 +89,16 @@ export default function App() {
   }
 
   async function clearHistoryFromFirestore() {
-    if (!user) return;
+    if (!user || !firebase.db) return;
     if (!window.confirm("Are you sure you want to delete ALL your meals? This cannot be undone.")) return;
     setLoadingHistory(true);
     setError("");
     try {
-      const q = query(collection(db, "meals"), where("uid", "==", user.uid));
-      const querySnapshot = await getDocs(q);
-      const deletions = querySnapshot.docs.map((d) => deleteDoc(doc(db, "meals", d.id)));
+      const q = firebase.query(firebase.collection(firebase.db, "meals"), firebase.where("uid", "==", user.uid));
+      const querySnapshot = await firebase.getDocs(q);
+      const deletions = querySnapshot.docs.map((d) =>
+        firebase.deleteDoc(firebase.doc(firebase.db, "meals", d.id))
+      );
       await Promise.all(deletions);
       setHistory([]);
       alert("All your meals have been deleted!");
@@ -137,29 +139,112 @@ export default function App() {
     fetchMeals();
   }
 
-  // --- Render ---
+  // Logout handler
+  async function handleLogout() {
+    if (firebase.auth) {
+      await firebase.auth.signOut();
+      setUser(null);
+    }
+  }
 
-  // If user not logged in, show AuthPanel component
+  // ---- LANDING PAGE ----
+  if (!showApp) {
+    return (
+      <div>
+        {/* HERO */}
+        <section className="hero-section">
+          <motion.h1
+            initial={{ opacity: 0, y: -35 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            Nutrify AI
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+          >
+            Track your Indian meals, see instant nutrition, and get AI-powered food insights.
+          </motion.p>
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            className="cta-btn"
+            onClick={() => setShowApp(true)}
+            transition={{ type: "spring", stiffness: 200 }}
+          >
+            Get Started
+          </motion.button>
+        </section>
+        {/* FEATURES */}
+        <section className="features-section">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Why Nutrify AI?
+          </motion.h2>
+          <div className="features-list">
+            <motion.div className="feature-card" whileHover={{ scale: 1.04 }}>
+              <span role="img" aria-label="camera" className="feature-icon">📸</span>
+              <h3>Photo Recognition</h3>
+              <p>Snap a meal photo, let AI detect what you ate, and log it in seconds!</p>
+            </motion.div>
+            <motion.div className="feature-card" whileHover={{ scale: 1.04 }}>
+              <span role="img" aria-label="nutrition" className="feature-icon">🥗</span>
+              <h3>Instant Nutrition</h3>
+              <p>Get calories, protein, fat, and carbs for popular Indian foods, instantly.</p>
+            </motion.div>
+            <motion.div className="feature-card" whileHover={{ scale: 1.04 }}>
+              <span role="img" aria-label="ai" className="feature-icon">🤖</span>
+              <h3>AI Meal Log</h3>
+              <p>Let our AI assistant help you build healthy eating habits over time.</p>
+            </motion.div>
+          </div>
+        </section>
+        {/* HOW IT WORKS */}
+        <section className="how-section">
+          <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            How It Works
+          </motion.h2>
+          <ol>
+            <motion.li initial={{x: -20, opacity: 0}} whileInView={{x: 0, opacity:1}} transition={{delay:0.2}}>Sign up or log in securely</motion.li>
+            <motion.li initial={{x: -20, opacity: 0}} whileInView={{x: 0, opacity:1}} transition={{delay:0.4}}>Upload a meal photo or pick a dish</motion.li>
+            <motion.li initial={{x: -20, opacity: 0}} whileInView={{x: 0, opacity:1}} transition={{delay:0.6}}>Get instant nutrition info and AI feedback</motion.li>
+          </ol>
+        </section>
+        {/* ABOUT */}
+        <section className="about-section">
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>About</motion.h2>
+          <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+            Nutrify AI is your companion for tracking Indian meals and making healthier food choices. Built with React, Firebase, and a pinch of AI magic!
+          </motion.p>
+        </section>
+        {/* FOOTER */}
+        <footer style={{ padding: "2em 0", textAlign: "center", color: "#888" }}>
+          <p>© {new Date().getFullYear()} Nutrify AI &middot; Built by You!</p>
+          <p style={{ fontSize: "0.9em" }}>Ready to start? <span className="cta-link" onClick={() => setShowApp(true)}>Sign up or log in</span></p>
+        </footer>
+      </div>
+    );
+  }
+
+  // ---- APP PANEL: AUTH ----
   if (!user) return (
     <div className="container">
-      <h1>Nutrify AI </h1>
-      <h5>hf</h5>
+      <h1>Nutrify AI</h1>
       <div className="card">
         <AuthPanel setUser={setUser} />
       </div>
+      <button className="back-btn" onClick={() => setShowApp(false)}>← Back to Landing Page</button>
     </div>
   );
 
-  // Logout handler
-  const handleLogout = async () => {
-    await auth.signOut();
-    setUser(null);
-  };
-
+  // ---- MAIN APP ----
   return (
     <div className="container">
       <h1>Indian Meal Nutrition Tracker 🥗</h1>
-
       <div className="card">
         <p>Welcome, {user.email || user.displayName}</p>
         <button className="logout-btn" onClick={handleLogout} style={{float: "right", marginTop: "-2.5em"}}>Logout</button>
@@ -223,6 +308,7 @@ export default function App() {
         <p style={{ fontSize: "0.9em", color: "#888" }}>
           Powered by React + Firebase Auth + Firestore.
         </p>
+        <button className="back-btn" onClick={() => setShowApp(false)} style={{marginTop:"1em"}}>← Back to Landing Page</button>
       </footer>
     </div>
   );
