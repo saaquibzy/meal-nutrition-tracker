@@ -19,27 +19,38 @@ export default function AuthPanel({ setUser }) {
     setUsername("");
   };
 
-  // Email/Password login/register
+  // Email/Password login
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
     } catch (err) {
-      setError(err.message);
+      console.log("Login error:", err.code, err.message);
+      setError(mapFirebaseError(err));
     }
   };
 
+  // Email/Password register
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+    if (!email || !password || !username) {
+      setError("Username, email, and password are required.");
+      return;
+    }
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       // Optionally save username to Firestore here
       setUser(userCredential.user);
     } catch (err) {
-      setError(err.message);
+      console.log("Register error:", err.code, err.message);
+      setError(mapFirebaseError(err));
     }
   };
 
@@ -50,9 +61,28 @@ export default function AuthPanel({ setUser }) {
       const userCredential = await signInWithPopup(auth, provider);
       setUser(userCredential.user);
     } catch (err) {
-      setError(err.message);
+      console.log("Social login error:", err.code, err.message);
+      setError(mapFirebaseError(err));
     }
   };
+
+  // Map Firebase errors to user-friendly messages
+  function mapFirebaseError(err) {
+    switch (err.code) {
+      case "auth/user-not-found":
+        return "No user found with this email. Please register first.";
+      case "auth/wrong-password":
+        return "Incorrect password.";
+      case "auth/email-already-in-use":
+        return "This email is already registered. Please log in.";
+      case "auth/invalid-email":
+        return "Invalid email address.";
+      case "auth/too-many-requests":
+        return "Too many requests. Please try again later.";
+      default:
+        return err.message;
+    }
+  }
 
   return (
     <div
