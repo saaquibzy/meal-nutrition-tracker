@@ -1,0 +1,212 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+/* Remove background-image here! It's set inline in JS */
+.login-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Example styles for login card layout */
+.login-card {
+  display: flex;
+  flex-direction: row;
+  width: 70vw;
+  min-width: 320px;
+  max-width: 900px;
+  min-height: 450px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 40px rgba(0,0,0,0.15);
+  align-items: stretch;
+}
+
+.login-left {
+  background: #e3b927;
+  color: #fff;
+  flex: 1.2;
+  padding: 2.5em 1.7em 2.5em 2.2em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border-radius: 32px 0 0 32px;
+}
+
+.login-left h1 {
+  font-size: 2em;
+  font-weight: 800;
+  margin-bottom: 0.6em;
+}
+
+.login-left p {
+  font-size: 1.1em;
+  margin-bottom: 1.2em;
+}
+
+.register-btn {
+  padding: 0.7em 1.7em;
+  border-radius: 0.4em;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(79,70,229,0.10);
+  transition: background 0.18s;
+}
+
+.register-btn:hover {
+  background: #3730a3;
+}
+
+.login-right {
+  flex: 2;
+  padding: 2.5em 2.2em 2.2em 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-right h2 {
+  font-size: 1.7em;
+  margin-bottom: 1.2em;
+  color: #232946;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 330px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.15em;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.93em 2.5em 0.93em 1.1em;
+  border-radius: 0.4em;
+  border: 1.5px solid #d1d5db;
+  font-size: 1.07em;
+  transition: border 0.17s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.input-icon {
+  position: absolute;
+  right: 1em;
+  top: 0.88em;
+  color: #888;
+  font-size: 1.1em;
+}
+
+.forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1em;
+}
+
+.forgot {
+  color: #4f46e5;
+  font-size: 0.97em;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-btn {
+  padding: 0.85em 1.8em;
+  border-radius: 0.4em;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 1.09em;
+  font-weight: 600;
+  margin-bottom: 1.1em;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(79,70,229,0.10);
+  transition: background 0.18s;
+}
+
+.login-btn:hover {
+  background: #3730a3;
+}
+
+.login-or {
+  text-align: center;
+  color: #888;
+  font-size: 0.98em;
+  margin-bottom: 1em;
+}
+
+.login-socials {
+  display: flex;
+  gap: 0.8em;
+  justify-content: center;
+}
+
+.login-socials button {
+  border: none;
+  background: #f3f4f6;
+  color: #4f46e5;
+  border-radius: 50%;
+  width: 2.3em;
+  height: 2.3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.22em;
+  box-shadow: 0 1px 7px rgba(79,70,229,0.07);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.login-socials button:hover {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.login-error {
+  color: #d90429;
+  margin-bottom: 1em;
+  text-align: center;
+  font-size: 1em;
+}
+
+@media (max-width: 900px) {
+  .login-card {
+    flex-direction: column;
+    min-width: unset;
+    width: 96vw;
+    border-radius: 20px;
+  }
+  .login-left, .login-right {
+    border-radius: 20px 20px 0 0;
+    padding: 2em 1em;
+  }
+  .login-left {
+    border-radius: 20px 20px 0 0;
+  }
+  .login-right {
+    border-radius: 0 0 20px 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-card { width: 100vw; }
+  .login-left h1 { font-size: 1.6em; }
+  .login-right h2 { font-size: 1.2em; }
+  .login-btn, .register-btn { font-size: 0.95em; }
+}

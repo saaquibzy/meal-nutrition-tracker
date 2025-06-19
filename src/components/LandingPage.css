@@ -1,0 +1,118 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+/* No background-image here! It's set inline in JS */
+
+.landing-card {
+  display: flex;
+  flex-direction: column;
+  width: 70vw;
+  min-width: 320px;
+  max-width: 1100px;
+  min-height: 510px;
+  border-radius: 48px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 40px rgba(0,0,0,0.18);
+  align-items: center;
+  padding: 0;
+}
+
+.landing-header {
+  background: #e3b927;
+  color: #fff;
+  width: 100%;
+  padding: 2.5em 1.5em 1.5em 1.5em;
+  text-align: center;
+  border-radius: 48px 48px 0 0;
+}
+
+.landing-header h1 {
+  font-size: 2.9em;
+  font-weight: 800;
+  margin-bottom: 0.4em;
+}
+
+.landing-header p {
+  font-size: 1.17em;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.landing-intro-section {
+  background: #fff;
+  width: 100%;
+  padding: 2.5em 2.5em 2em 2.5em;
+  border-radius: 0 0 48px 48px;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+}
+
+.landing-intro-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #232946;
+}
+
+.landing-intro-section p {
+  font-size: 1.15rem;
+  color: #4a5568;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.cta-links {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.landing-btn {
+  padding: 0.9rem 2.2rem;
+  border-radius: 0.5rem;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  font-size: 1.13rem;
+  text-decoration: none;
+  transition: background 0.18s;
+  font-weight: 600;
+  box-shadow: 0 2px 12px rgba(79,70,229,0.10);
+  cursor: pointer;
+}
+
+.landing-btn.secondary {
+  background: #fff;
+  color: #4f46e5;
+  border: 2px solid #4f46e5;
+}
+
+.landing-btn:hover, .landing-btn.secondary:hover {
+  background: #3730a3;
+  color: #fff;
+  border-color: #3730a3;
+}
+
+@media (max-width: 900px) {
+  .landing-card {
+    min-width: unset;
+    width: 96vw;
+    border-radius: 32px;
+  }
+  .landing-header, .landing-intro-section {
+    border-radius: 32px 32px 0 0;
+    padding: 2em 1em;
+  }
+  .landing-intro-section {
+    border-radius: 0 0 32px 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-card { width: 100vw; }
+  .landing-header h1 { font-size: 2.1em; }
+  .landing-intro-section h2 { font-size: 1.4em; }
+  .landing-btn { font-size: 1.2em; }
+}
